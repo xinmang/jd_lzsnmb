@@ -310,7 +310,7 @@ def start():
                     if j['id'] == 'toComment':
                         cname = j['name']  # 评价按钮名字
                 if cname is None:
-                    print("没获得到按钮数据，跳过这个商品！")
+                    #print("没获得到按钮数据，跳过这个商品！")
                     continue
 
                 Ci.append({'name': name, 'oid': oid, 'pid': pid, 'cname': cname, 'multi': multi})
@@ -351,7 +351,7 @@ def start():
             def pjsj():
                 req = requests.post(url, headers=he, data=data)
                 if req.json()['errMsg'] == 'success':
-                    print("\t普通评价成功！！")
+                    #print("\t普通评价成功！！")
                     Cent[ce]['评价'] += 1 
                 else:
                     print("\t普通评价失败了.......")
@@ -360,13 +360,13 @@ def start():
             def pjfw():
                 se_req = requests.get(se_url, headers=he, params=se_data)
                 if se_req.json()['errMsg'] == 'success':
-                    print("\t服务评价成功！！")
+                    #print("\t服务评价成功！！")
                     Cent[ce]['服务评价'] += 1 
                 else:
                     print("\t服务评价失败了.......")
                     print(se_data)
 
-            print(f'开始评论\t{da["name"]}[{da["oid"]},评论信息为[{xing}]：{context}]')
+            print(f'开始评论{i}\t[{da["oid"]}')
 
             if da['cname'] == "评价晒单":
                 pjsj()
@@ -377,7 +377,7 @@ def start():
                 pass
             else:
                 print(da['cname'])
-            print('等待5秒-可持续发展！')
+            #print('等待5秒-可持续发展！')
             time.sleep(5)
 
     # 晒单
@@ -386,9 +386,9 @@ def start():
         for i, da in enumerate(op(headers,_type=False)):
             if da['cname'] == "追加评价":
                 context = generation(da['name'], _type=0)
-                print(f'开始晒单{i},{da["name"]}')
+                print(f'开始晒单{i},{da["oid"]}')
                 if da['multi']:
-                    print('\t多个商品跳过！')
+                    #print('\t多个商品跳过！')
                     continue
                 url = 'https://comment-api.jd.com/comment/appendComment?sceneval=2&g_login_type=1&g_ty=ajax'
                 data = {
@@ -401,12 +401,12 @@ def start():
                 }
                 req = requests.post(url, headers=headers, data=data)
                 if req.json()['data']['result'] != {}:
-                    print("\t晒单成功！！！")
+                    #print("\t晒单成功！！！")
                     Cent[ce]['晒单'] += 1 
                 else:
                     print("\t晒单失败...")
                     print(req.json())
-                print('等待5秒-可持续发展！')
+                #print('等待5秒-可持续发展！')
                 time.sleep(5)
 
     print('### 开始批量评价 ###')
@@ -414,6 +414,7 @@ def start():
     cookiesList, userNameList, pinNameList = getCk.iscookie()
 
     for i,ck,user,pin in zip(range(1,len(cookiesList)+1),cookiesList,userNameList,pinNameList):
+        
         print(f"** 开始[账号{i}]-{user} **")
         headers = {
             'cookie': ck,
@@ -426,7 +427,10 @@ def start():
         sunbw(headers, f'账号{i}[{user}]')
         print('完成！！。等待10秒')
         time.sleep(10)
-    send('京东全自动评价',str(Cent))
+    msg = ''
+    for i in Cent:
+        msg += f'{i}\n{Cent[i]}\n\n' 
+    send('京东全自动评价',msg)
 
 
 
