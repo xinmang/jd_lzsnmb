@@ -341,11 +341,12 @@ def start():
                 'g_login_type': '0',
                 'g_ty': 'ls'
             }
+            // xing:评价星级，5则为5星好评
             xing, context = generation(da['name'])
             data = {
                 'productId': da['pid'],
                 'orderId': da['oid'],
-                'score': xing,
+                'score': 5,
                 'content': context,
                 'commentTagStr': 1,
                 'userclient': 29,
